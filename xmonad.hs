@@ -83,15 +83,15 @@ myUrgentWSRight = "}"
 -- "avoidStruts" modifier makes it so that the layout provides
 -- space for the status bar at the top of the screen.
 myLayouts = smartBorders(avoidStruts(
+  -- Full layout makes every window full screen. When you toggle the
+  -- active window, it will bring the active window to the front.
+  noBorders Full
+
   -- ResizableTall layout has a large master window on the left,
   -- and remaining windows tile on the right. By default each area
   -- takes up half the screen, but you can resize using "super-h" and
   -- "super-l".
-  ResizableTall 1 (3/100) (1/2) []
-
-  -- Full layout makes every window full screen. When you toggle the
-  -- active window, it will bring the active window to the front.
-  ||| noBorders Full
+  ||| ResizableTall 1 (3/100) (1/2) []
 
   -- Grid layout tries to equally distribute windows in the available
   -- space, increasing the number of columns and rows as necessary.
