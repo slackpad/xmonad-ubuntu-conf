@@ -38,11 +38,11 @@ import Data.Ratio ((%))
   simpler parts of xmonad's behavior and are straightforward to tweak.
 -}
 
-myModMask            = mod4Mask       -- changes the mod key to "super"
+myModMask            = mod1Mask       -- mod key to use
 myFocusedBorderColor = "#ff0000"      -- color of focused border
 myNormalBorderColor  = "#cccccc"      -- color of inactive border
 myBorderWidth        = 1              -- width of border around windows
-myTerminal           = "terminator"   -- which terminal software to use
+myTerminal           = "gnome-terminal"   -- which terminal software to use
 myIMRosterTitle      = "Contact List" -- title of roster on IM workspace
 
 
@@ -63,36 +63,6 @@ myVisibleWSRight = ")"
 myUrgentWSLeft  = "{"         -- wrap urgent workspace with these
 myUrgentWSRight = "}"
 
-
-{-
-  Workspace configuration. Here you can change the names of your
-  workspaces. Note that they are organized in a grid corresponding
-  to the layout of the number pad.
-
-  I would recommend sticking with relatively brief workspace names
-  because they are displayed in the xmobar status bar, where space
-  can get tight. Also, the workspace labels are referred to elsewhere
-  in the configuration file, so when you change a label you will have
-  to find places which refer to it and make a change there as well.
-
-  This central organizational concept of this configuration is that
-  the workspaces correspond to keys on the number pad, and that they
-  are organized in a grid which also matches the layout of the number pad.
-  So, I don't recommend changing the number of workspaces unless you are
-  prepared to delve into the workspace navigation keybindings section
-  as well.
--}
-
-myWorkspaces =
-  [
-    "7:Chat",  "8:Dbg", "9:Pix",
-    "4:Docs",  "5:Dev", "6:Web",
-    "1:Term",  "2:Hub", "3:Mail",
-    "0:VM",    "Extr1", "Extr2"
-  ]
-
-startupWorkspace = "5:Dev"  -- which workspace do you want to be on after launch?
-
 {-
   Layout configuration. In this section we identify which xmonad
   layouts we want to use. I have defined a list of default
@@ -112,17 +82,12 @@ startupWorkspace = "5:Dev"  -- which workspace do you want to be on after launch
 -- appear if there is more than one visible window.
 -- "avoidStruts" modifier makes it so that the layout provides
 -- space for the status bar at the top of the screen.
-defaultLayouts = smartBorders(avoidStruts(
+myLayouts = smartBorders(avoidStruts(
   -- ResizableTall layout has a large master window on the left,
   -- and remaining windows tile on the right. By default each area
   -- takes up half the screen, but you can resize using "super-h" and
   -- "super-l".
   ResizableTall 1 (3/100) (1/2) []
-
-  -- Mirrored variation of ResizableTall. In this layout, the large
-  -- master window is at the top, and remaining windows tile at the
-  -- bottom of the screen. Can be resized as described above.
-  ||| Mirror (ResizableTall 1 (3/100) (1/2) [])
 
   -- Full layout makes every window full screen. When you toggle the
   -- active window, it will bring the active window to the front.
@@ -131,46 +96,7 @@ defaultLayouts = smartBorders(avoidStruts(
   -- Grid layout tries to equally distribute windows in the available
   -- space, increasing the number of columns and rows as necessary.
   -- Master window is at top left.
-  ||| Grid
-
-  -- ThreeColMid layout puts the large master window in the center
-  -- of the screen. As configured below, by default it takes of 3/4 of
-  -- the available space. Remaining windows tile to both the left and
-  -- right of the master window. You can resize using "super-h" and
-  -- "super-l".
-  ||| ThreeColMid 1 (3/100) (3/4)
-
-  -- Circle layout places the master window in the center of the screen.
-  -- Remaining windows appear in a circle around it
-  ||| Circle))
-
-
--- Here we define some layouts which will be assigned to specific
--- workspaces based on the functionality of that workspace.
-
--- The chat layout uses the "IM" layout. We have a roster which takes
--- up 1/8 of the screen vertically, and the remaining space contains
--- chat windows which are tiled using the grid layout. The roster is
--- identified using the myIMRosterTitle variable, and by default is
--- configured for Empathy, so if you're using something else you
--- will want to modify that variable.
-chatLayout = avoidStruts(withIM (1%7) (Title myIMRosterTitle) Grid)
-
--- The GIMP layout uses the ThreeColMid layout. The traditional GIMP
--- floating panels approach is a bit of a challenge to handle with xmonad;
--- I find the best solution is to make the image you are working on the
--- master area, and then use this ThreeColMid layout to make the panels
--- tile to the left and right of the image. If you use GIMP 2.8, you
--- can use single-window mode and avoid this issue.
-gimpLayout = smartBorders(avoidStruts(ThreeColMid 1 (3/100) (3/4)))
-
--- Here we combine our default layouts with our specific, workspace-locked
--- layouts.
-myLayouts =
-  onWorkspace "7:Chat" chatLayout
-  $ onWorkspace "9:Pix" gimpLayout
-  $ defaultLayouts
-
+  ||| Grid))
 
 {-
   Custom keybindings. In this section we define a list of relatively
@@ -196,11 +122,9 @@ myLayouts =
   the output.
 -}
 
-myKeyBindings =
+myKeys =
   [
     ((myModMask, xK_b), sendMessage ToggleStruts)
-    , ((myModMask, xK_a), sendMessage MirrorShrink)
-    , ((myModMask, xK_z), sendMessage MirrorExpand)
     , ((myModMask, xK_p), spawn "synapse")
     , ((myModMask, xK_u), focusUrgent)
     , ((0, 0x1008FF12), spawn "amixer -q set Master toggle")
@@ -256,72 +180,7 @@ myManagementHooks :: [ManageHook]
 myManagementHooks = [
   resource =? "synapse" --> doIgnore
   , resource =? "stalonetray" --> doIgnore
-  , className =? "rdesktop" --> doFloat
-  , (className =? "Komodo IDE") --> doF (W.shift "5:Dev")
-  , (className =? "Komodo IDE" <&&> resource =? "Komodo_find2") --> doFloat
-  , (className =? "Komodo IDE" <&&> resource =? "Komodo_gotofile") --> doFloat
-  , (className =? "Komodo IDE" <&&> resource =? "Toplevel") --> doFloat
-  , (className =? "Empathy") --> doF (W.shift "7:Chat")
-  , (className =? "Pidgin") --> doF (W.shift "7:Chat")
-  , (className =? "Gimp-2.8") --> doF (W.shift "9:Pix")
   ]
-
-
-{-
-  Workspace navigation keybindings. This is probably the part of the
-  configuration I have spent the most time messing with, but understand
-  the least. Be very careful if messing with this section.
--}
-
--- We define two lists of keycodes for use in the rest of the
--- keyboard configuration. The first is the list of numpad keys,
--- in the order they occur on the keyboard (left to right and
--- top to bottom). The second is the list of number keys, in an
--- order corresponding to the numpad. We will use these to
--- make workspace navigation commands work the same whether you
--- use the numpad or the top-row number keys. And, we also
--- use them to figure out where to go when the user
--- uses the arrow keys.
-numPadKeys =
-  [
-    xK_KP_Home, xK_KP_Up, xK_KP_Page_Up
-    , xK_KP_Left, xK_KP_Begin,xK_KP_Right
-    , xK_KP_End, xK_KP_Down, xK_KP_Page_Down
-    , xK_KP_Insert, xK_KP_Delete, xK_KP_Enter
-  ]
-
-numKeys =
-  [
-    xK_7, xK_8, xK_9
-    , xK_4, xK_5, xK_6
-    , xK_1, xK_2, xK_3
-    , xK_0, xK_minus, xK_equal
-  ]
-
--- Here, some magic occurs that I once grokked but has since
--- fallen out of my head. Essentially what is happening is
--- that we are telling xmonad how to navigate workspaces,
--- how to send windows to different workspaces,
--- and what keys to use to change which monitor is focused.
-myKeys = myKeyBindings ++
-  [
-    ((m .|. myModMask, k), windows $ f i)
-       | (i, k) <- zip myWorkspaces numPadKeys
-       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-  ] ++
-  [
-    ((m .|. myModMask, k), windows $ f i)
-       | (i, k) <- zip myWorkspaces numKeys
-       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-  ] ++
-  M.toList (planeKeys myModMask (Lines 4) Finite) ++
-  [
-    ((m .|. myModMask, key), screenWorkspace sc
-      >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [1,0,2]
-      , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
-  ]
-
 
 {-
   Here we actually stitch together all the configuration settings
@@ -337,11 +196,9 @@ main = do
   , terminal = myTerminal
   , borderWidth = myBorderWidth
   , layoutHook = myLayouts
-  , workspaces = myWorkspaces
   , modMask = myModMask
   , handleEventHook = fullscreenEventHook
   , startupHook = do
-      windows $ W.greedyView startupWorkspace
       spawn "~/.xmonad/startup-hook"
   , manageHook = manageHook defaultConfig
       <+> composeAll myManagementHooks

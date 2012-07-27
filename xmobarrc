@@ -22,7 +22,7 @@ Config {
   -- of your screen to make it play nicely with stalonetray, which we
   -- want to be taking up the remainer of the space on the right side
   -- of your screen.
-  position = TopW L 95, 
+  position = TopW L 93,
 
   -- list of commands which gather information about your system for
   -- presentation in the bar. 
