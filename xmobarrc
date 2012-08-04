@@ -46,7 +46,7 @@ Config {
     -- based upon your specific hardware. Or, for a desktop you may want
     -- to just remove this section entirely.
     Run Battery [
-      "-t", "<acstatus>: <left>%", 
+      "-t", "<acstatus>: <timeleft>",
       "--", 
       "-c", "charge_full",
       "-O", "AC",
@@ -74,5 +74,5 @@ Config {
 
    -- Overall template for the layout of the xmobar contents. Note that
    -- space is significant and can be used to add padding.
-   template = "%StdinReader% }{ %battery% | %cpu% | %memory% | Vol: %myvolume%    <fc=#e6744c>%date%</fc>     "
+   template = "%StdinReader% }{ %battery% | %cpu% | Vol: %myvolume% | <fc=#e6744c>%date%</fc>   "
 }

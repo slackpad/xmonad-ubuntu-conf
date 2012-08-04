@@ -26,6 +26,7 @@ import XMonad.Layout.Fullscreen
 import XMonad.Util.EZConfig
 import XMonad.Util.Run
 import XMonad.Hooks.DynamicLog
+import XMonad.Actions.CycleWindows
 import XMonad.Actions.Plane
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
@@ -38,11 +39,11 @@ import Data.Ratio ((%))
   simpler parts of xmonad's behavior and are straightforward to tweak.
 -}
 
-myModMask            = mod1Mask       -- mod key to use
+myModMask            = mod4Mask       -- mod key to use
 myFocusedBorderColor = "#ff0000"      -- color of focused border
 myNormalBorderColor  = "#cccccc"      -- color of inactive border
 myBorderWidth        = 1              -- width of border around windows
-myTerminal           = "gnome-terminal"   -- which terminal software to use
+myTerminal           = "term"         -- which terminal software to use
 myIMRosterTitle      = "Contact List" -- title of roster on IM workspace
 
 
@@ -127,11 +128,18 @@ myKeys =
     ((myModMask, xK_b), sendMessage ToggleStruts)
     , ((myModMask, xK_p), spawn "synapse")
     , ((myModMask, xK_u), focusUrgent)
+    , ((myModMask, xK_0), spawn "lock")
+    , ((mod1Mask, xK_Tab), cycleRecentWindows [xK_Alt_L] xK_Tab xK_Tab )
     , ((0, 0x1008FF12), spawn "amixer -q set Master toggle")
     , ((0, 0x1008FF11), spawn "amixer -q set Master 10%-")
     , ((0, 0x1008FF13), spawn "amixer -q set Master 10%+")
   ]
 
+delKeys =
+  [
+    (myModMask, xK_period)
+    , (myModMask, xK_w)
+  ]
 
 {-
   Management hooks. You can use management hooks to enforce certain
@@ -215,3 +223,4 @@ main = do
     }
   }
     `additionalKeys` myKeys
+    `removeKeys` delKeys
