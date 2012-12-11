@@ -128,7 +128,7 @@ myKeys =
     ((myModMask, xK_b), sendMessage ToggleStruts)
     , ((myModMask, xK_p), spawn "synapse")
     , ((myModMask, xK_u), focusUrgent)
-    , ((myModMask, xK_0), spawn "lock")
+    , ((myModMask, xK_F2), spawn "gnome-screensaver-command --lock")
     , ((myModMask, xK_F12), spawn "sudo pm-suspend")
     , ((mod1Mask, xK_Tab), cycleRecentWindows [xK_Alt_L] xK_Tab xK_Tab )
     , ((0, 0x1008FF12), spawn "amixer -q set Master toggle")
