@@ -1,16 +1,16 @@
--- xmobar configuration file 
+-- xmobar configuration file
 --
 -- Mess with this file to change the appearance of the contents of the
 -- status bar which are not directly controlled by xmonad. You can see your
 -- changes immediately by recompiling xmonad using "super-q".
--- 
--- There's a lot you can do here. Refer to "man xmobar". 
--- 
+--
+-- There's a lot you can do here. Refer to "man xmobar".
+--
 -- Author: David Brewer
 -- Repository: https://github.com/davidbrewer/xmonad-ubuntu-conf
 
 
-Config { 
+Config {
   -- Set font and default foreground/background colors. Note that
   -- the height of xmobar is controlled by the font you use.
   font = "xft:Ubuntu Mono-14",
@@ -25,10 +25,10 @@ Config {
   position = TopW L 93,
 
   -- list of commands which gather information about your system for
-  -- presentation in the bar. 
-  commands = [ 
-    -- Gather and format CPU usage information. 
-    -- If it's above 50%, we consider it high usage and make it red.  
+  -- presentation in the bar.
+  commands = [
+    -- Gather and format CPU usage information.
+    -- If it's above 50%, we consider it high usage and make it red.
     Run Cpu [
       "-H","50",
       "--high","red"
@@ -47,25 +47,24 @@ Config {
     -- to just remove this section entirely.
     Run Battery [
       "-t", "<acstatus>: <timeleft>",
-      "--", 
-      "-c", "charge_full",
+      "--",
       "-O", "AC",
       "-o", "Bat",
       "-h", "green",
       "-l", "red"
     ] 10,
-    
+
     -- To get volume information, we run a custom bash script.
     -- This is because the built-in volume support in xmobar is disabled
-    -- in Debian and derivatives like Ubuntu. 
-    Run Com "~/.xmonad/get-volume" [] "myvolume" 10,
-    
+    -- in Debian and derivatives like Ubuntu.
+    Run Com "/home/james/.xmonad/get-volume" [] "myvolume" 10,
+
     -- This line tells xmobar to read input from stdin. That's how we
     -- get the information that xmonad is sending it for display.
     Run StdinReader
    ],
 
-   -- Separator character used to wrape variables in the xmobar template 
+   -- Separator character used to wrape variables in the xmobar template
    sepChar = "%",
 
    -- Alignment separater characer used in the xmobar template. Everything
